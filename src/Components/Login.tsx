@@ -1,12 +1,37 @@
 import { Box,Paper, TextField,Typography,Button,Container } from "@mui/material"
+
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
+
   const navigate = useNavigate()
+  
+  
+  const handleLogin =()=>{
+    const emial = (document.getElementById("email") as HTMLInputElement).value;
+    const password = (document.getElementById("password") as HTMLInputElement).value;
+
+    const loginData = localStorage.getItem("userData");
+    const users= loginData?JSON.parse(loginData):[];
+    const user = users.find((user:{email:string,password:string})=>(emial === user.email && password === user.password))
+
+    if(user){
+      console.log("login success")
+      navigate("/")
+    }
+    else{
+      console.log("email and pswd is incorrect")
+    }
+
+  }
+
+  
 
     const handleSignupClick =()=>{
         navigate("/signup");
     }
+
+
   return (
     <Container maxWidth={false}
   sx={{
@@ -34,21 +59,7 @@ const Login = () => {
       zIndex: 0
     }}
   />
-     {/* <Box
-      sx={{
-        backgroundColor:"red",
-        position:"relative",
-        display: 'flex',
-        alignItems: "center", 
-            justifyContent: "center"  ,
-        flexWrap: 'wrap',
-        '& > :not(style)': {
-          m: 1,
-          width: "100%",
-          height: "70%",
-        },
-      }}> */}
-    
+     
       <Paper elevation={8}
       sx={{
             boxShadow: '0px 4px 30px rgba(43, 22, 235, 0.3)',
@@ -81,6 +92,7 @@ const Login = () => {
       noValidate
       autoComplete="off"
     >
+      {/* email */}
       <TextField required id="email" type="email" label="Email" variant="outlined" autoFocus/>
       <TextField 
           id="password"
@@ -91,7 +103,7 @@ const Login = () => {
         />
     </Box>
         <Box sx={{m:2}}>
-          <Button variant="contained" type="submit" color="primary" sx={{
+          <Button onClick={handleLogin} variant="contained" type="submit" color="primary" sx={{
             width: { xs: "100%", sm: "200px" },
             py: 1.2,
             fontWeight: 600,
@@ -107,7 +119,7 @@ const Login = () => {
           </Typography>
             </Paper>
       
-    {/* </Box> */}
+    
     </Container>
   )
 }
