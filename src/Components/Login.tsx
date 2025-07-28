@@ -1,29 +1,39 @@
 import { Box,Paper, TextField,Typography,Button,Container } from "@mui/material"
+import { useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError]= useState("");
 
   const navigate = useNavigate()
   
-  
-  const handleLogin =()=>{
-    const emial = (document.getElementById("email") as HTMLInputElement).value;
-    const password = (document.getElementById("password") as HTMLInputElement).value;
 
-    const loginData = localStorage.getItem("userData");
-    const users= loginData?JSON.parse(loginData):[];
-    const user = users.find((user:{email:string,password:string})=>(emial === user.email && password === user.password))
-
-    if(user){
-      console.log("login success")
-      navigate("/")
-    }
-    else{
-      console.log("email and pswd is incorrect")
-    }
-
+  const handleLogin = () => {
+  if (!email || !password) {
+    setError("Please enter email and password.");
+    return;
   }
+
+  const loginData = localStorage.getItem("userData");
+  const users = loginData ? JSON.parse(loginData) : [];
+
+  const user = users.find(
+    (user: { email: string; password: string }) =>
+      email === user.email && password === user.password
+  );
+
+  if (user) {
+    alert("Login successful!");
+    localStorage.setItem("loggedInUser", JSON.stringify(user));
+    navigate("/dashboard");
+  } else {
+    setError("Invalid email or password.");
+  }
+};
+
 
   
 
@@ -93,17 +103,23 @@ const Login = () => {
       autoComplete="off"
     >
       {/* email */}
-      <TextField required id="email" type="email" label="Email" variant="outlined" autoFocus/>
+      <TextField required id="email" type="email" label="Email" variant="outlined" autoFocus
+                  value={email} onChange={(e) => setEmail(e.target.value)}/>
       <TextField 
           id="password"
           label="Password"
           type="password"
           autoComplete="current-password"
           variant="outlined"
+           value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          error={Boolean(error)} helperText={error}
         />
     </Box>
         <Box sx={{m:2}}>
-          <Button onClick={handleLogin} variant="contained" type="submit" color="primary" sx={{
+          <Button onClick={handleLogin} variant="contained" 
+          
+          type="submit" color="primary" sx={{
             width: { xs: "100%", sm: "200px" },
             py: 1.2,
             fontWeight: 600,
