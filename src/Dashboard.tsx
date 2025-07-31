@@ -1,7 +1,9 @@
-import { Container,Toolbar,useTheme,Box } from "@mui/material"
+import { Container,Toolbar,useTheme,Box,Button } from "@mui/material"
 import Navbar from "./DashComponents/NavBar"
 import Cardspot from "./DashComponents/Cardspot";
 import { useEffect, useState } from "react";
+import AuthorForm from "./DashComponents/FormModal"
+import ListSpot from "./DashComponents/ListSpot";
 
 
 
@@ -18,14 +20,14 @@ type Spot = {
 
 const Dashboard = () => {
     const theme = useTheme();
-    const [spots, setspots]= useState<Spot[]>([]) ;//Delete state
+    const [spots, setspots]= useState<Spot[]>([]) ;
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
    
     const handleDelete = (deleteIndex:any) => {
   const updatedSpots = spots.filter((_, i) => i !== deleteIndex);
   setspots(updatedSpots);
   localStorage.setItem("userSpot", JSON.stringify(updatedSpots));
-};
+    };
 
 
     
@@ -37,6 +39,18 @@ const Dashboard = () => {
         setspots(parseData);
       }
     },[])
+
+      const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+      const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
+
+      const handleEdit = (spot: Spot) => {
+        console.log("Editing spot:", spot);
+        setSelectedSpot(spot);
+        setIsEditModalOpen(true);
+      };
+
+      const [viewType, setViewType] = useState<"card" | "list">("card");
+
     
   return (
     
@@ -46,8 +60,20 @@ const Dashboard = () => {
         }}  maxWidth={false} >
       <Navbar/>
       <Toolbar/>
+
       <Box sx={{backgroundColor:"green", height:"auto"}}>
+        <Box sx={{display:"flex", justifyContent:"flex-end", p:2  }}>
+        <Button
+          onClick={() => setViewType(viewType === "card" ? "list" : "card")}
+          variant="contained"
+          color="primary"
+          sx={{mt:5}}
+        >
+          {viewType === "card" ? "Switch to List View" : "Switch to Card View"}
+        </Button></Box>
+
       <div style={{ display: "flex",flexDirection:"row",flexWrap: "wrap",justifyContent:"space-between" ,gap: "50px", padding: "1rem" }}>
+        
         {spots.map((spot, index) => (
           
           <Cardspot
@@ -62,13 +88,24 @@ const Dashboard = () => {
              detail={spot.detailDesc} // future: for "Read More"
              onDelete={()=>handleDelete(index)}
             canDelete={spot.authorName === loggedInUser.fullname}
-             
-            
-          />
-          
+            onEdit={handleEdit}
+          />       
         ))}
       </div>
       </Box>
+      <Box>
+        <ListSpot/>
+      </Box>
+        
+       
+            <AuthorForm
+          open={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          initialData={selectedSpot} // New prop to pass data
+          isEdit={true} // Optional: flag to know it's edit mode
+        />  
+       
+
     </Container>
   )
 }

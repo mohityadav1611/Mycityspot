@@ -5,7 +5,8 @@ import Welcome from './Components/Welcome'
 import Login from './Components/Login'
 import SignUp from './Components/Signup';
 import Dashboard from './Dashboard';
-import FormModal from './DashComponents/FormModal';
+// import FormModal from './DashComponents/FormModal';
+import AuthorForm from './DashComponents/FormModal';
 function App() {
   
   return (
@@ -15,7 +16,7 @@ function App() {
       <Route path='/login' element={<Login/>}/>     
       <Route path='/signup' element={<SignUp/>}/>     
       <Route path='/dashboard' element={<Dashboard/>}/>     
-      <Route path="/form" element={<FormModal />} />
+      <Route path="/form" element={<AuthorForm isEdit={false} open={true} onClose={() => {}} />} />
     </Routes>
     </>
   )

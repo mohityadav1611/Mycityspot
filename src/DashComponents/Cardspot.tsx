@@ -9,6 +9,17 @@ import EditIcon from "@mui/icons-material/Edit";
 
 
 
+interface Spot {
+  image: string;
+  place: string;
+  city: string;
+  Type: string;
+  state: string;
+  short: string;
+  authorName: string;
+  detail: string;
+}
+
 interface CardspotProps {
   image: string;
   place: string;
@@ -20,27 +31,38 @@ interface CardspotProps {
   detail: string;
   onDelete:any;
   canDelete: boolean;
+  onEdit:(item: Spot)=>void;
 }
 
-const Cardspot: React.FC<CardspotProps> = ({ image, place, city, Type, state, short, authorName,detail,onDelete,canDelete }) => {
+const Cardspot: React.FC<CardspotProps> = ({ image, place, city, Type, state, short, authorName,detail,onDelete,canDelete,onEdit }) => {
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  
+
    const handleDelete = () => {
     onDelete(); // parent se aayega
   };
 
   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
       const handleEdit = () => {
-        // Step 2 me handle karenge
         console.log("Edit button clicked");
+        const spot={
+          image,
+          place,
+          city,
+          Type,
+          state,
+          short,
+          authorName,
+          detail
+        };
+        onEdit(spot)
       };
 
   return (
     
-    <Card sx={{ width: 350, height: 440,maxHeight:600, display: "flex", flexDirection: "column", justifyContent: "space-between",border: "2px solid red", borderRadius: 3, boxShadow: 3,mt:12 }}> 
+    <Card sx={{ width: 350, height: 440,maxHeight:600, display: "flex", flexDirection: "column", justifyContent: "space-between",border: "2px solid red", borderRadius: 3, boxShadow: 3,mt:4 }}> 
     <Box sx={{maxHeight:200}}>
       <CardMedia
         component="img"
@@ -79,7 +101,7 @@ const Cardspot: React.FC<CardspotProps> = ({ image, place, city, Type, state, sh
             <Box>
             <Typography sx={{ mt: 1, cursor: "pointer", color: "blue", fontWeight: "light", display: "inline-block", }}
              onClick={handleOpen} >
-          Read More...
+          Readmore...
         </Typography></Box>
         <Box>
             <IconButton onClick={handleDelete} disabled={!canDelete}>
