@@ -1,153 +1,139 @@
-import { Box, Typography, TextField, Select, MenuItem,Autocomplete, InputLabel, FormControl, Button,}
- from "@mui/material";
- 
-
- function AuthorForm() {
-        const [authorName, setAuthorName] = useState("");
-        const [authorError, setAuthorError] = useState("");
-        const [place, setPlace] = useState("");
-        const [placeError, setPlaceError] = useState("");
-        const [city, setCity] = useState("");
-        const [cityError, setCityError] = useState("");
+import {
+  Box,
+  Typography,
+  TextField,
+  Select,
+  MenuItem,
+  Autocomplete,
+  InputLabel,
+  FormControl,
+  Button,
+} from "@mui/material";
+import { useState,useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const indianStates = [
   "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
-  "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand",
-  "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur",
-  "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
-  "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura",
-  "Uttar Pradesh", "Uttarakhand", "West Bengal", "Delhi", "Jammu and Kashmir",
-  "Ladakh", "Puducherry", "Chandigarh", "Andaman and Nicobar Islands", "Dadra and Nagar Haveli and Daman and Diu"
+  "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
+  "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram",
+  "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu",
+  "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal",
+  "Delhi", "Jammu and Kashmir", "Ladakh", "Puducherry", "Chandigarh",
+  "Andaman and Nicobar Islands", "Dadra and Nagar Haveli and Daman and Diu"
 ];
 
-        const [state, setState] = useState<string>("");
-        const [stateError, setStateError] = useState("");
+function AuthorForm() {
+  const [authorName, setAuthorName] = useState("");
+  // const [authorError, setAuthorError] = useState("");
+  const [place, setPlace] = useState("");
+  const [placeError, setPlaceError] = useState("");
+  const [city, setCity] = useState("");
+  const [cityError, setCityError] = useState("");
+  const [state, setState] = useState("");
+  const [stateError, setStateError] = useState("");
+  const [spotType, setSpotType] = useState("");
+  const [image, setImage] = useState<File | null>(null);
+  const [shortDesc, setShortDesc] = useState("");
+  const [detailDesc, setDetailDesc] = useState("");
+  const navigate = useNavigate();
 
-        const [spotType, setSpotType] = useState("");
-        const [spotTypeError, setSpotTypeError] = useState("");
+  const userloggedIn = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
+    useEffect(() => {
+      setAuthorName(userloggedIn.fullname || "");
+    }, []);
 
-        const [image, setImage] = useState<File | null>(null);
-        const [imageError, setImageError] = useState("");
 
-        const [shortDesc, setShortDesc] = useState("");
-        const [shortDescError, setShortDescError] = useState("");
-
-        const [detailDesc, setDetailDesc] = useState("");
-        const [detailDescError, setDetailDescError] = useState("");
-       
-       // State variables for form fields
-       const handleName=()=>{
-if (authorName.trim() === "") {
-    setAuthorError("Author name is required.");
-    
-  } else if (authorName.length < 3) {
-    setAuthorError("At least 3 characters required.");
-    
-  } else {
-    setAuthorError("");
-  }};
+  // const handleName = () => {
+  //   if (authorName.trim() === "") {
+  //     setAuthorError("Author name is required.");
+  //   } else if (authorName.length < 3) {
+  //     setAuthorError("At least 3 characters required.");
+  //   } else {
+  //     setAuthorError("");
+  //   }
+  // };
 
   const handlePlace = () => {
-  if (place.trim() === "") {
-    setPlaceError("Place is required.");
-  } else if (place.length < 3) {
-    setPlaceError("At least 3 characters required.");
-  } else {
-    setPlaceError("");
-  }
-};
+    if (place.trim() === "") {
+      setPlaceError("Place is required.");
+    } else if (place.length < 3) {
+      setPlaceError("At least 3 characters required.");
+    } else {
+      setPlaceError("");
+    }
+  };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
 
-// Submit handler
-const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
-  let isValid = true;
+    // Validation flags
+    let isValid = true;
 
-  // Author Name
-  
+    // if (authorName.trim() === "") {
+    //   setAuthorError("Author name is required.");
+    //   isValid = false;
+    // }
 
-  // Place
-  if (place.trim() === "") {
-    setPlaceError("Place is required.");
-    isValid = false;
-  } else if (place.length < 3) {
-    setPlaceError("At least 3 characters required.");
-    isValid = false;
-  } else {
-    setPlaceError("");
-  }
+    if (place.trim() === "") {
+      setPlaceError("Place is required.");
+      isValid = false;
+    }
 
-  // City
-  if (city.trim() === "") {
-    setCityError("City is required.");
-    isValid = false;
-  } else {
-    setCityError("");
-  }
+    if (city.trim() === "") {
+      setCityError("City is required.");
+      isValid = false;
+    } else {
+      setCityError("");
+    }
 
-  // State
-  if (state === "") {
-    setStateError("Please select a state.");
-    isValid = false;
-  } else {
-    setStateError("");
-  }
+    if (state === "") {
+      setStateError("Please select a state.");
+      isValid = false;
+    } else {
+      setStateError("");
+    }
 
-  // Spot Type
-  if (spotType.trim() === "") {
-    setSpotTypeError("Spot type is required.");
-    isValid = false;
-  } else {
-    setSpotTypeError("");
-  }
+    if (!image) {
+      alert("Please upload an image.");
+      isValid = false;
+    }
 
-  // Image
-  if (!image) {
-    setImageError("Please upload an image.");
-    isValid = false;
-  } else {
-    setImageError("");
-  }
+    if (shortDesc.trim() === "") {
+      alert("Short description is required.");
+      isValid = false;
+    }
 
-  // Short Description
-  if (shortDesc.trim() === "") {
-    setShortDescError("Short description is required.");
-    isValid = false;
-  } else if (shortDesc.length < 10) {
-    setShortDescError("At least 10 characters required.");
-    isValid = false;
-  } else {
-    setShortDescError("");
-  }
+    if (detailDesc.trim().length < 20) {
+      alert("Detailed description must be at least 20 characters.");
+      isValid = false;
+    }
 
-  // Detail Description
-  if (detailDesc.trim() === "") {
-    setDetailDescError("Detail description is required.");
-    isValid = false;
-  } else if (detailDesc.length < 20) {
-    setDetailDescError("At least 20 characters required.");
-    isValid = false;
-  } else {
-    setDetailDescError("");
-  }
+    if (isValid && image) {
+  const reader = new FileReader();
 
-  // ✅ If all validations pass
-  if (isValid) {
+  reader.onloadend = () => {
+    const base64Image = reader.result as string;
+
     const formData = {
       authorName,
       place,
       city,
       state,
       spotType,
-      imageName: image?.name,
+      image: base64Image, // ✅ converted image
       shortDesc,
       detailDesc,
     };
 
-    console.log("📦 Form submitted successfully:", formData);
-    alert("Form submitted successfully!");
+        const oldData = localStorage.getItem("userSpot");
+    const dataArray = oldData ? JSON.parse(oldData) : [];
+    dataArray.unshift(formData);
+    localStorage.setItem("userSpot", JSON.stringify(dataArray));
 
-    // Reset form
+    alert("Spot submitted successfully!");
+    navigate("/dashboard");
+
+    // Reset
     setAuthorName("");
     setPlace("");
     setCity("");
@@ -156,142 +142,129 @@ const handleSubmit = (e: React.FormEvent) => {
     setImage(null);
     setShortDesc("");
     setDetailDesc("");
-  }
-};
+  };
 
+  reader.readAsDataURL(image); // ✅ Convert image to Base64
+}}
 
 
   return (
     <form onSubmit={handleSubmit}>
-    <Box sx={{ p: 3, maxWidth: "800px", mx: "auto" }}>
-      {/* Author Profile */}
-      <Box
+      <Box sx={{ p: 3, maxWidth: 800, mx: "auto" }}>
+        <Box
         sx={{ bgcolor: "background.paper", p: 3, mb: 4, borderRadius: 2, boxShadow: 3,
         }}
       >
         <Typography variant="h4" align="center" gutterBottom>
           Author Profile
         </Typography>
-        <TextField value={authorName} onChange={(e)=>setAuthorName(e.target.value)}  error={!!authorError}
-          helperText={authorError} onBlur={handleName}
-          fullWidth id="authorName" label="✍️ Enter Your Name" placeholder="Contributor name"
-          margin="normal"
-        />
-      
-      {/* Place Info */}
-              
-        <TextField value={place} onChange={(e)=>setPlace(e.target.value)}  error={!!placeError}
-          helperText={placeError} onBlur={handlePlace}
+
+                  <TextField
+            fullWidth
+            label="✍️ Author Name"
+            value={authorName} // ✅ Correct way
+            InputProps={{ readOnly: true }} // ✅ Use this instead of slotProps
+            margin="normal"
+            // error={!!authorError}
+            // helperText={authorError}
+          />
+
+
+        <TextField
           fullWidth
-          required
-          id="Place"
           label="📍 Place Name"
-          placeholder="Enter a famous place"
+          value={place}
+          onChange={(e) => setPlace(e.target.value)}
+          onBlur={handlePlace}
+          error={!!placeError}
+          helperText={placeError}
           margin="normal"
         />
 
-        {/* City & State */}
         <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 2 }}>
-          <TextField value={city} onChange={(e)=>setCity(e.target.value)}  error={!!cityError}
-          helperText={cityError}
+          <TextField
             fullWidth
-            required
-            id="City"
             label="🏙️ City"
-            placeholder="Enter city name"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            error={!!cityError}
+            helperText={cityError}
             margin="normal"
           />
-        
 
-        <Autocomplete
-        fullWidth
-        options={indianStates}
-        value={state}
-        onChange={(_, newValue) => {
-            const selectedState = newValue || "";
-            setState(selectedState);
-
-            if (!selectedState) {
-            setStateError("State is required");
-            } else {
-            setStateError("");
-            }
-        }}
-        renderInput={(params) => (
-            <TextField
-            {...params}
-            label="🌍 State"
-            margin="normal"
-            error={!!stateError}
-            helperText={stateError}
-            />
-        )}
-        />
+          <Autocomplete
+            fullWidth
+            options={indianStates}
+            value={state}
+            onChange={(_, val) => {
+              setState(val || "");
+              setStateError(val ? "" : "State is required");
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="🌍 State"
+                error={!!stateError}
+                helperText={stateError}
+                margin="normal"
+              />
+            )}
+          />
         </Box>
 
-        {/* Spot Type */}
-        <FormControl fullWidth margin="normal" >
+        <FormControl fullWidth margin="normal">
           <InputLabel id="spot-type-label">📌 Type of Spot</InputLabel>
-          <Select labelId="spot-type-label" id="spotType" label="📌 Type of Spot" error={!!spotTypeError}
+          <Select
+            labelId="spot-type-label"
+            value={spotType}
+            onChange={(e) => setSpotType(e.target.value)}
+            label="📌 Type of Spot"
           >
-            <MenuItem value="">-- Select Type --</MenuItem>
-            <MenuItem value="Temple">Temple</MenuItem>
-            <MenuItem value="Nature">Nature</MenuItem>
-            <MenuItem value="Historical">Historical</MenuItem>
-            <MenuItem value="Lake">Lake</MenuItem>
-            <MenuItem value="Food">Food</MenuItem>
-            <MenuItem value="Other">Other</MenuItem>
+            {["Temple", "Nature", "Historical", "Lake", "Food", "Other"].map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
           </Select>
-          <TextField helperText={spotTypeError}></TextField>
         </FormControl>
 
-        {/* Image Upload */}
-        <TextField error={!!imageError} helperText={imageError}
-          fullWidth
-          required
-          type="file"
-          id="imageUrl"
-          margin="normal"
-          InputLabelProps={{ shrink: true }}
-        />
+        <TextField required
+        fullWidth
+        type="file"
+        onChange={(e) =>
+          setImage((e.target as HTMLInputElement).files?.[0] || null)
+        }
+        margin="normal"
+        InputLabelProps={{ shrink: true }}
+      />
 
-        {/* Short Description */}
-        <TextField error={!!shortDescError} helperText={shortDescError}
+
+        <TextField
           fullWidth
-          required
-          id="Short"
           label="✏️ Short Description"
-          placeholder="One-line overview"
+          value={shortDesc}
+          onChange={(e) => setShortDesc(e.target.value)}
           margin="normal"
         />
 
-        {/* Detailed Description */}
-        <TextField  error={!!detailDescError} helperText={detailDescError}
+        <TextField
           fullWidth
-          required
-          id="Detail"
           label="📖 Detailed Description"
-          placeholder="Write full description here..."
           multiline
           rows={5}
+          value={detailDesc}
+          onChange={(e) => setDetailDesc(e.target.value)}
           margin="normal"
         />
 
-        {/* Submit */}
-        <Box sx={{ textAlign: "center", mt: 2 }}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            size="large"
-          >
+        <Box sx={{ textAlign: "center", mt: 3 }}>
+          <Button type="submit" variant="contained" size="large">
             ✅ Submit Spot
           </Button>
         </Box>
       </Box>
-    </Box>
-    </form>
+    </Box></form>
   );
 }
-import { useState } from "react";
-export default AuthorForm
+
+export default AuthorForm;
