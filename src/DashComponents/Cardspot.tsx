@@ -1,5 +1,7 @@
 // Cardspot.tsx
-import { Card, CardContent, Typography, CardMedia,Box, Modal, } from "@mui/material";
+import { Card, CardContent, Typography, CardMedia,Box, Modal,
+  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button
+ } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person"
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
@@ -40,9 +42,20 @@ const Cardspot: React.FC<CardspotProps> = ({ image, place, city, Type, state, sh
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-   const handleDelete = () => {
-    onDelete(); // parent se aayega
-  };
+  const [openConfirm, setOpenConfirm] = useState(false); // for delete confirm
+
+        const handleDeleteClick = () => {
+          setOpenConfirm(true); // open dialog
+        };
+
+        const handleConfirmDelete = () => {
+          onDelete(); // parent se aayega
+          setOpenConfirm(false);
+        };
+
+        const handleCancelDelete = () => {
+          setOpenConfirm(false);
+        };
 
   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
       const handleEdit = () => {
@@ -62,18 +75,28 @@ const Cardspot: React.FC<CardspotProps> = ({ image, place, city, Type, state, sh
 
   return (
     
-    <Card sx={{ width: 350, height: 440,maxHeight:600, display: "flex", flexDirection: "column", justifyContent: "space-between",border: "2px solid red", borderRadius: 3, boxShadow: 3,mt:4 }}> 
+    <Card sx={{ width: 350, height: 440,maxHeight:600, display: "flex", flexDirection: "column", justifyContent: "space-between",border: "2px solid red", borderRadius: 3,mt:2 
+      ,boxShadow: '4px 4px 20px rgba(0, 123, 255, 0.3)',
+      transition: "transform 0.3s ease, box-shadow 0.3s ease",
+       "&:hover": {
+      transform: "scale(1.02)",
+      boxShadow: 6,
+    },
+    }}> 
     <Box sx={{maxHeight:200}}>
       <CardMedia
         component="img"
-
         height="180"
         image={image}
         alt={place}
-        sx={{ objectFit: "cover",overflow:"hidden" }}
+        sx={{   height: 200,
+          width: '100%',
+          objectFit: 'cover',
+          borderTopLeftRadius: '10px',
+          borderTopRightRadius: '10px', }}
       /></Box>
       <CardContent>
-        <Typography variant="h6" color="primary" gutterBottom>
+        <Typography variant="h6" color="primary" gutterBottom sx={{ fontWeight: 'bold', color: '#1976d2' }}>
           📍 {place}
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -104,7 +127,7 @@ const Cardspot: React.FC<CardspotProps> = ({ image, place, city, Type, state, sh
           Readmore...
         </Typography></Box>
         <Box>
-            <IconButton onClick={handleDelete} disabled={!canDelete}>
+            <IconButton onClick={handleDeleteClick} disabled={!canDelete}>
               <DeleteOutlineIcon  color={canDelete?"error":"disabled"} />
             </IconButton>
             {authorName === loggedInUser.fullname && (
@@ -138,6 +161,20 @@ const Cardspot: React.FC<CardspotProps> = ({ image, place, city, Type, state, sh
         </Box>
 
       </Modal>
+
+      <Dialog open={openConfirm} onClose={handleCancelDelete}>
+  <DialogTitle>Confirm Delete</DialogTitle>
+  <DialogContent>
+    <DialogContentText>
+      Are you sure you want to delete this spot?
+    </DialogContentText>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={handleCancelDelete}>Cancel</Button>
+    <Button onClick={handleConfirmDelete} color="error">Delete</Button>
+  </DialogActions>
+</Dialog>
+
     </Card>
    
   );

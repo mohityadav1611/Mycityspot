@@ -33,20 +33,36 @@ const isDark = localStorage.getItem("themeMode") === "dark";
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar  sx={{ backgroundColor:theme.palette.mode === 'light' ? 'primary' : '#1F2937' }}>
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between",  }}>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between", 
+          flexWrap: { xs: "wrap", sm: "nowrap" }, rowGap: 2
+         }}>
           {/* App Name / Logo */}
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
-            <img src="/Logo 2.png" alt="" height={80} width={100}/>
+          <Typography variant="h6" component="div"
+           sx={{ fontWeight: "bold",display: "flex", alignItems: "center"}}>
+                    <Box component="img"
+            src="/Logo 2.png"
+            alt="Logo"
+            sx={{
+              height: { xs: 50, sm: 70, md: 80 },
+              width: { xs: 70, sm: 90, md: 100 },
+            }}
+          />
+
+            {/* <img src="/Logo 2.png" alt="" height={80} width={100}/> */}
           </Typography>
           
           {/* User Name & Logout Button */}
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center",
+             gap: 1.5,flexDirection: { xs: "column", sm: "row" },textAlign: { xs: "center", sm: "left" },
+             width: { xs: "100%", sm: "auto" }, }}>
             {user && (
-              <Typography variant="body1" sx={{ fontWeight: 500 }}>
+              <Typography variant="body1" sx={{ fontWeight: 500,fontSize: { xs: "0.9rem", sm: "1rem" } }}>
                 Welcome, {user.fullname}
               </Typography>
             )}
-            <Button variant="contained" sx={{backgroundColor:"grey"}} onClick={()=>navigate1("/form")}>
+            <Button variant="contained"
+             sx={{backgroundColor:"grey",fontSize: { xs: "0.75rem", sm: "0.9rem" },px: { xs: 1, sm: 2 },}} 
+             onClick={()=>navigate1("/form")}>
               + Create Spot
             </Button>
             <Button variant="contained" color="secondary" onClick={handleLogout}>

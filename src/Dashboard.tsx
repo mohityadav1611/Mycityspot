@@ -4,7 +4,7 @@ import Cardspot from "./DashComponents/Cardspot";
 import { useEffect, useState } from "react";
 import AuthorForm from "./DashComponents/FormModal"
 import ListSpot from "./DashComponents/ListSpot";
-
+import { Autocomplete, TextField } from '@mui/material';
 
 
 type Spot = {
@@ -49,32 +49,97 @@ const Dashboard = () => {
         setIsEditModalOpen(true);
       };
 
-      const [viewType, setViewType] = useState<"card" | "list">("card");
+// Toggle state
 
+      const [viewType, setViewType] = useState<"card" | "list">("card");
+// search bar state
+      const [searchInput, setSearchInput] = useState("");
+
+      const filteredSpots = spots.filter((spot)=>{
+        const input = searchInput.toLowerCase().trim();
+        return(
+           spot.place.toLowerCase().includes(input) ||
+          spot.city.toLowerCase().includes(input) ||
+          spot.state.toLowerCase().includes(input)
+        )
+      })
     
   return (
     
     <Container sx={{backgroundColor:theme.palette.mode === 'light' ? '#eeeeee' : '#1F2937', 
         
-        width: '100vw', height: '100vh',paddingBottom: "2rem",minHeight: "100vh"
-        }}  maxWidth={false} >
+         py: { xs: 2, sm: 3, md: 2 },px: { xs: 2, sm: 4, md: 4 },minHeight: "100vh",
+       pb: { xs: 4, sm: 6 }, overflowX: "hidden", }}  maxWidth={false} >
       <Navbar/>
       <Toolbar/>
 
-      <Box sx={{backgroundColor:"green", height:"auto"}}>
-        <Box sx={{display:"flex", justifyContent:"flex-end", p:2  }}>
+      <Box sx={{ height:"auto"}}>
+        
+        <Box sx={{display:"flex",flexDirection: { xs: "column", sm: "row" }, justifyContent: "space-between",
+         alignItems: { xs: "stretch", sm: "center" },gap:2,px:2, pt: { xs: 22, sm: 10 },  }}>
+
+        <Autocomplete
+      freeSolo
+      options={[...new Set(spots.flatMap((spot) => [spot.place, spot.city, spot.state]))]}
+      onInputChange={(e, value) => setSearchInput(value)}
+      renderInput={(params) => (
+    <TextField
+      {...params}
+      label="Search Places / City / State"
+      variant="outlined"
+      sx={{
+        // backgroundColor: "#fff",
+        borderRadius: "8px",
+        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+        '& .MuiOutlinedInput-root': {
+          '&:hover': {
+            transform: "scale(1.02)",
+            transition: "transform 0.2s ease-in-out",
+          },
+        },
+      }}
+    />
+  )}
+  sx={{
+    width: { xs: '100%', sm: 350 },
+    
+    transition: "all 0.3s ease-in-out",
+    '&:hover': {
+      transform: "scale(1.02)",
+    },
+  }}
+/>
+
+
         <Button
           onClick={() => setViewType(viewType === "card" ? "list" : "card")}
           variant="contained"
           color="primary"
-          sx={{mt:5}}
+          sx={{width: { xs: '100%', sm: 'auto' },
+              borderRadius: '30px', px: 3, fontWeight: 600,
+             textTransform: 'capitalize',  }}
         >
           {viewType === "card" ? "Switch to List View" : "Switch to Card View"}
         </Button></Box>
 
-      <div style={{ display: "flex",flexDirection:"row",flexWrap: "wrap",justifyContent:"space-between" ,gap: "50px", padding: "1rem" }}>
+        {viewType === 'card' ?(
+            <Box
+      sx={{
+         display: "grid",
+    gridTemplateColumns: {
+      xs: "1fr",        // small screen: 1 column
+      sm: "1fr 1fr",    // small screen: 2 columns
+      md: "1fr 1fr 1fr",// medium: 3
+      lg: "1fr 1fr 1fr", // large: 4
+    },
+    gap: 4,
+    px: 2,
+    py: 2,
+      }}
+    >
+
         
-        {spots.map((spot, index) => (
+        {filteredSpots.map((spot, index) => (
           
           <Cardspot
             key={index}
@@ -90,12 +155,18 @@ const Dashboard = () => {
             canDelete={spot.authorName === loggedInUser.fullname}
             onEdit={handleEdit}
           />       
-        ))}
-      </div>
+        ))}</Box>
+      
+      ) : (
+      
+      <Box sx={{ p: 2 }}>
+        
+        <ListSpot
+        spots={filteredSpots}     
+        onEdit={handleEdit}/>  
       </Box>
-      <Box>
-        <ListSpot/>
-      </Box>
+    )}
+    </Box>
         
        
             <AuthorForm
