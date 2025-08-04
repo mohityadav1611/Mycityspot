@@ -266,6 +266,7 @@ const handleUpdate = () => {
         sx={{ bgcolor: "background.paper", p: 3, mb: 4, borderRadius: 2, boxShadow: 3,
         }}
       >
+
         <Typography variant="h4" align="center" gutterBottom>
           Author Profile
         </Typography>
@@ -379,9 +380,9 @@ const handleUpdate = () => {
     </Dialog>
     ) :
     
-    ( <form onSubmit={handleSubmit}>
+    ( <form onSubmit={handleSubmit} onClick={()=>{navigate("/dashboard")}}>
       
-      <Box sx={{ p: 3, maxWidth: 800, mx: "auto" }}>
+      <Box onClick={(e)=>e.stopPropagation()} sx={{ p: 3, maxWidth: 800, mx: "auto" }} >
         <Box
         sx={{ bgcolor: "background.paper", p: 3, mb: 4, borderRadius: 2, boxShadow: 3,
         }}

@@ -1,6 +1,7 @@
 // Cardspot.tsx
 import { Card, CardContent, Typography, CardMedia,Box, Modal,
-  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button
+  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button,
+  useTheme
  } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person"
 import CloseIcon from "@mui/icons-material/Close";
@@ -9,6 +10,19 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from "@mui/icons-material/Edit";
 
+interface CardspotProps {
+  image: string;
+  place: string;
+  city: string;
+  Type: string;
+  state: string;
+  short: string;
+  authorName: string;
+  detail: string;
+  onDelete: any;
+  canDelete: boolean;
+  onEdit: (item: Spot) => void;
+}
 
 
 interface Spot {
@@ -72,7 +86,7 @@ const Cardspot: React.FC<CardspotProps> = ({ image, place, city, Type, state, sh
         };
         onEdit(spot)
       };
-
+      const theme=useTheme()
   return (
     
     <Card sx={{ width: 350, height: 440,maxHeight:600, display: "flex", flexDirection: "column", justifyContent: "space-between",border: "2px solid red", borderRadius: 3,mt:2 
@@ -81,9 +95,10 @@ const Cardspot: React.FC<CardspotProps> = ({ image, place, city, Type, state, sh
        "&:hover": {
       transform: "scale(1.02)",
       boxShadow: 6,
-    },
+      
+    },backgroundColor:theme.palette.mode === 'light' ?"white":"#1F2937"
     }}> 
-    <Box sx={{maxHeight:200}}>
+    <Box sx={{maxHeight:200 , }}>
       <CardMedia
         component="img"
         height="180"
@@ -122,7 +137,7 @@ const Cardspot: React.FC<CardspotProps> = ({ image, place, city, Type, state, sh
 
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: 8 }}>
             <Box>
-            <Typography sx={{ mt: 1, cursor: "pointer", color: "blue", fontWeight: "light", display: "inline-block", }}
+            <Typography sx={{ mt: 1, cursor: "pointer", color: "#1976d2", fontWeight: "light", display: "inline-block", }}
              onClick={handleOpen} >
           Readmore...
         </Typography></Box>

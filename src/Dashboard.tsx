@@ -1,10 +1,12 @@
 import { Container,Toolbar,useTheme,Box,Button } from "@mui/material"
 import Navbar from "./DashComponents/NavBar"
 import Cardspot from "./DashComponents/Cardspot";
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef } from "react";
 import AuthorForm from "./DashComponents/FormModal"
 import ListSpot from "./DashComponents/ListSpot";
 import { Autocomplete, TextField } from '@mui/material';
+import Footer from "./Components/Footer";
+import HeroSection from "./Components/HeroSection";
 
 
 type Spot = {
@@ -30,6 +32,7 @@ const Dashboard = () => {
     };
 
 
+    const cardSectionRef = useRef<HTMLDivElement>(null);
     
     useEffect(()=>{
       const storeData= localStorage.getItem("userSpot");
@@ -66,16 +69,19 @@ const Dashboard = () => {
     
   return (
     
-    <Container sx={{backgroundColor:theme.palette.mode === 'light' ? '#eeeeee' : '#1F2937', 
+    <Container  sx={{backgroundColor:theme.palette.mode === 'light' ? '#eeeeee' : '#1F2937', 
         
          py: { xs: 2, sm: 3, md: 2 },px: { xs: 2, sm: 4, md: 4 },minHeight: "100vh",
        pb: { xs: 4, sm: 6 }, overflowX: "hidden", }}  maxWidth={false} >
       <Navbar/>
+      
       <Toolbar/>
-
-      <Box sx={{ height:"auto"}}>
+      <HeroSection scrollToRef={cardSectionRef}/>
+      <Box sx={{ height:"auto"}} ref={cardSectionRef}>
         
-        <Box sx={{display:"flex",flexDirection: { xs: "column", sm: "row" }, justifyContent: "space-between",
+        
+        
+        <Box id="box" sx={{display:"flex",flexDirection: { xs: "column", sm: "row" }, justifyContent: "space-between",
          alignItems: { xs: "stretch", sm: "center" },gap:2,px:2, pt: { xs: 22, sm: 10 },  }}>
 
         <Autocomplete
@@ -175,9 +181,10 @@ const Dashboard = () => {
           initialData={selectedSpot} // New prop to pass data
           isEdit={true} // Optional: flag to know it's edit mode
         />  
-       
-
+        <Box>
+        <Footer/></Box>
     </Container>
+   
   )
 }
 

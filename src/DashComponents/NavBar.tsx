@@ -1,4 +1,3 @@
-
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -11,15 +10,15 @@ import { ColorModeContext } from "../ThemeContext";
 import IconButton from "@mui/material/IconButton";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
+import Avatar from "@mui/material/Avatar";  // 🔥 Added Avatar import
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const navigate1 = useNavigate();
 
   const { toggleColorMode } = useContext(ColorModeContext);
-const isDark = localStorage.getItem("themeMode") === "dark";
+  const isDark = localStorage.getItem("themeMode") === "dark";
 
-  // Get logged-in user name from localStorage
+  // Get logged-in user data (with photo)
   const user = JSON.parse(localStorage.getItem("loggedInUser") || "null");
 
   const handleLogout = () => {
@@ -27,49 +26,74 @@ const isDark = localStorage.getItem("themeMode") === "dark";
     alert("Logged out successfully!");
     navigate("/login");
   };
-        const theme = useTheme();
-  
+
+  const theme = useTheme();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar  sx={{ backgroundColor:theme.palette.mode === 'light' ? 'primary' : '#1F2937' }}>
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between", 
-          flexWrap: { xs: "wrap", sm: "nowrap" }, rowGap: 2
-         }}>
-          {/* App Name / Logo */}
+      <AppBar sx={{ backgroundColor: theme.palette.mode === 'light' ? 'primary' : '#1F2937' }}>
+        <Toolbar sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          flexWrap: { xs: "wrap", sm: "nowrap" },
+          rowGap: 2
+        }}>
+          {/* Logo */}
           <Typography variant="h6" component="div"
-           sx={{ fontWeight: "bold",display: "flex", alignItems: "center"}}>
-                    <Box component="img"
-            src="/Logo 2.png"
-            alt="Logo"
-            sx={{
-              height: { xs: 50, sm: 70, md: 80 },
-              width: { xs: 70, sm: 90, md: 100 },
-            }}
-          />
-
-            {/* <img src="/Logo 2.png" alt="" height={80} width={100}/> */}
+            sx={{ fontWeight: "bold", display: "flex", alignItems: "center" }}>
+            <Box component="img"
+              src="/Logo 2.png"
+              alt="Logo"
+              sx={{
+                height: { xs: 50, sm: 70, md: 80 },
+                width: { xs: 70, sm: 90, md: 100 },
+              }}
+            />
           </Typography>
-          
-          {/* User Name & Logout Button */}
-          <Box sx={{ display: "flex", alignItems: "center",
-             gap: 1.5,flexDirection: { xs: "column", sm: "row" },textAlign: { xs: "center", sm: "left" },
-             width: { xs: "100%", sm: "auto" }, }}>
+
+          {/* User Info, Buttons, Avatar */}
+          <Box sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+            flexDirection: { xs: "column", sm: "row" },
+            textAlign: { xs: "center", sm: "left" },
+            width: { xs: "100%", sm: "auto" },
+          }}>
             {user && (
-              <Typography variant="body1" sx={{ fontWeight: 500,fontSize: { xs: "0.9rem", sm: "1rem" } }}>
-                Welcome, {user.fullname}
-              </Typography>
+              <>
+                <Typography variant="body1" sx={{
+                  fontWeight: 500,
+                  fontSize: { xs: "0.9rem", sm: "1rem" }
+                }}>
+                  Welcome, {user.fullname}
+                </Typography>
+
+                {/* 🔥 Avatar for user photo */}
+                {user.photo && (
+                  <Avatar
+                    alt={user.fullname}
+                    src={user.photo}
+                    sx={{ width: 40, height: 40, border: "2px solid white" }}
+                  />
+                )}
+              </>
             )}
+
             <Button variant="contained"
-             sx={{backgroundColor:"grey",fontSize: { xs: "0.75rem", sm: "0.9rem" },px: { xs: 1, sm: 2 },}} 
-             onClick={()=>navigate1("/form")}>
+              sx={{
+                backgroundColor: "grey",
+                fontSize: { xs: "0.75rem", sm: "0.9rem" },
+                px: { xs: 1, sm: 2 },
+              }}
+              onClick={() => navigate("/form")}>
               + Create Spot
             </Button>
             <Button variant="contained" color="secondary" onClick={handleLogout}>
               Logout
             </Button>
             <IconButton onClick={toggleColorMode} color="inherit">
-            {isDark ? <LightModeIcon /> : <DarkModeIcon />}
+              {isDark ? <LightModeIcon /> : <DarkModeIcon />}
             </IconButton>
           </Box>
         </Toolbar>

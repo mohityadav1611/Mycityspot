@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  useTheme,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -79,12 +80,13 @@ const ListSpot = ({ spots, onEdit }: ListSpotProps) => {
     setSelectedSpot(null);
   };
 
+  const theme=useTheme();
   
   return (
     <Box sx={{ p: 2 }}>
-      <Typography variant="h5" gutterBottom>
+      {/* <Typography variant="h5" gutterBottom>
         List View
-      </Typography>
+      </Typography> */}
 
       {spots.map((spot, index) => {
         const canDelete = loggedInUser.fullname === spot.authorName;
@@ -100,7 +102,7 @@ const ListSpot = ({ spots, onEdit }: ListSpotProps) => {
               gap: 2,
               alignItems: { sm: "center" },
               p: 2,
-              mb: 2,borderRadius: 2,
+              mb: 2,borderRadius: 2,backgroundColor:theme.palette.mode === 'light' ?"white":"#1F2937",
               transition: "transform 0.3s ease, box-shadow 0.3s ease",
                 "&:hover": {
                   transform: "scale(1.01)",
