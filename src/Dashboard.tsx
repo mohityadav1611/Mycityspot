@@ -23,6 +23,7 @@ type Spot = {
 const Dashboard = () => {
     const theme = useTheme();
     const [spots, setspots]= useState<Spot[]>([]) ;
+    
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser") || "{}");
    
     const handleDelete = (deleteIndex:any) => {
@@ -32,7 +33,7 @@ const Dashboard = () => {
     };
 
 
-    const cardSectionRef = useRef<HTMLDivElement>(null);
+    const cardSectionRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
     
     useEffect(()=>{
       const storeData= localStorage.getItem("userSpot");
@@ -53,8 +54,18 @@ const Dashboard = () => {
       };
 
 // Toggle state
+      // Step 1: Get view from localStorage (safe default = "card")
+const viewR = localStorage.getItem("viewType");
+const viewF = viewR ? JSON.parse(viewR) : "card"; // fallback to "card"
 
-      const [viewType, setViewType] = useState<"card" | "list">("card");
+// Step 2: Set it in state
+const [viewType, setViewType] = useState<"card" | "list">(viewF);
+
+// Step 3: Whenever viewType changes, update it in localStorage
+useEffect(() => {
+  localStorage.setItem("viewType", JSON.stringify(viewType));
+}, [viewType]);
+
 // search bar state
       const [searchInput, setSearchInput] = useState("");
 
@@ -78,7 +89,7 @@ const Dashboard = () => {
       <Toolbar/>
       <HeroSection scrollToRef={cardSectionRef}/>
       <Box sx={{ height:"auto"}} ref={cardSectionRef}>
-        
+
         
         
         <Box id="box" sx={{display:"flex",flexDirection: { xs: "column", sm: "row" }, justifyContent: "space-between",
@@ -178,7 +189,7 @@ const Dashboard = () => {
             <AuthorForm
           open={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
-          initialData={selectedSpot} // New prop to pass data
+          initialData={selectedSpot ?? undefined} // New prop to pass data
           isEdit={true} // Optional: flag to know it's edit mode
         />  
         <Box>

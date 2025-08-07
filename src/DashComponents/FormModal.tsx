@@ -139,8 +139,11 @@ function AuthorForm({open,onClose, initialData,isEdit}:AuthorFormProps & { open:
       alert("Short description is required.");
       isValid = false;
     }
+    else if (shortDesc.trim().split(/\s+/).length < 10){
+      alert("Short description must be at least 10 characters")
+    }
 
-    if (detailDesc.trim().length < 20) {
+    if (detailDesc.trim().split(/\s+/).length < 20) {
       alert("Detailed description must be at least 20 characters.");
       isValid = false;
     }
@@ -380,13 +383,17 @@ const handleUpdate = () => {
     </Dialog>
     ) :
     
-    ( <form onSubmit={handleSubmit} onClick={()=>{navigate("/dashboard")}}>
+    ( <form onSubmit={handleSubmit}>
       
-      <Box onClick={(e)=>e.stopPropagation()} sx={{ p: 3, maxWidth: 800, mx: "auto" }} >
+      <Box  sx={{ p: 3, maxWidth: 800, mx: "auto" }} >
         <Box
         sx={{ bgcolor: "background.paper", p: 3, mb: 4, borderRadius: 2, boxShadow: 3,
         }}
       >
+        <Box sx={{display:"flex", justifyContent:"flex-end"}}>
+        <Button  color="primary" onClick={()=>navigate("/dashboard")}>
+              Close
+            </Button></Box>
         <Typography variant="h4" align="center" gutterBottom>
           Author Profile
         </Typography>

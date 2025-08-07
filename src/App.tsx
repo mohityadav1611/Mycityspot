@@ -7,10 +7,12 @@ import SignUp from './Components/Signup';
 import Dashboard from './Dashboard';
 // import FormModal from './DashComponents/FormModal';
 import AuthorForm from './DashComponents/FormModal';
+import ScrollTop from './DashComponents/ScrollTop';
 function App() {
   
   return (
     <>
+    <ScrollTop/>
     <Routes>
       <Route path='/' element={<Welcome/>}/>
       <Route path='/login' element={<Login/>}/>     

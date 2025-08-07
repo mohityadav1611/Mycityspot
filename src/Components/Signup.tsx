@@ -1,12 +1,16 @@
 import { Box, Paper, TextField, Typography, Button, Container, useTheme } from "@mui/material";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import {IconButton, InputAdornment} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const SignUp = () => {
   const [fullname, setFullname] = useState("");
   const [nameError, setnameError] = useState("");
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -35,9 +39,11 @@ const SignUp = () => {
     }
   };
 
+
+
   const handlePassword = () => {
     const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
+      setShowPassword(false);
     if (password.trim() === "") {
       setPasswordError("Password is required.");
     } else if (!strongPasswordRegex.test(password)) {
@@ -48,6 +54,7 @@ const SignUp = () => {
   };
 
   const handleConfirmPassword = () => {
+    setShowConfirmPassword(false);
     if (confirmPassword.trim() === "") {
       setConfirmPasswordError("Confirm Password is required.");
     } else if (confirmPassword !== password) {
@@ -238,42 +245,59 @@ const SignUp = () => {
           />
 
           <TextField
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onBlur={handlePassword}
-            error={Boolean(passwordError)}
-            helperText={passwordError}
-            id="pswd"
-            type="password"
-            label="Password"
-            variant="outlined"
-            InputProps={{
-              style: { color: isDarkMode ? "#FFFFFF" : "" },
-            }}
-            InputLabelProps={{
-              style: { color: isDarkMode ? "#FFFFFF" : "" },
-            }}
-          />
+  required
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  onBlur={handlePassword}
+  error={Boolean(passwordError)}
+  helperText={passwordError}
+  id="pswd"
+  type={showPassword ? "text" : "password"}
+  label="Password"
+  variant="outlined"
+  InputProps={{
+    endAdornment: (
+      <InputAdornment position="end">
+        <IconButton onClick={() => setShowPassword((prev) => !prev)} edge="end">
+          {showPassword ? <VisibilityOff /> : <Visibility />}
+        </IconButton>
+      </InputAdornment>
+    ),
+    style: { color: isDarkMode ? "#FFFFFF" : "" },
+  }}
+  InputLabelProps={{
+    style: { color: isDarkMode ? "#FFFFFF" : "" },
+  }}
+/>
 
-          <TextField
-            required
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            onBlur={handleConfirmPassword}
-            error={Boolean(confirmPasswordError)}
-            helperText={confirmPasswordError}
-            id="cpswd"
-            type="password"
-            label="Confirm Password"
-            variant="outlined"
-            InputProps={{
-              style: { color: isDarkMode ? "#FFFFFF" : "" },
-            }}
-            InputLabelProps={{
-              style: { color: isDarkMode ? "#FFFFFF" : "" },
-            }}
-          />
+<TextField
+  required
+  value={confirmPassword}
+  onChange={(e) => setConfirmPassword(e.target.value)}
+  onBlur={handleConfirmPassword}
+  error={Boolean(confirmPasswordError)}
+  helperText={confirmPasswordError}
+  id="cpswd"
+  type={showConfirmPassword ? "text" : "password"}
+  label="Confirm Password"
+  variant="outlined"
+  InputProps={{
+    endAdornment: (
+      <InputAdornment position="end">
+        <IconButton
+          onClick={() => setShowConfirmPassword((prev) => !prev)}
+          edge="end"
+        >
+          {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+        </IconButton>
+      </InputAdornment>
+    ),
+    style: { color: isDarkMode ? "#FFFFFF" : "" },
+  }}
+  InputLabelProps={{
+    style: { color: isDarkMode ? "#FFFFFF" : "" },
+  }}
+/>
 
           <Button
             variant="contained"

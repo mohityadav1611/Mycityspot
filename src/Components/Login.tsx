@@ -1,11 +1,14 @@
 import { Box, Paper, TextField, Typography, Button, Container, useTheme } from "@mui/material";
 import { useState,useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { IconButton, InputAdornment, } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -124,17 +127,37 @@ const Login = () => {
             sx={{ mb: 2 }}
           />
           <TextField
-            fullWidth
-            id="password"
-            label="Password"
-            type="password"
-            variant="outlined"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            error={Boolean(error)}
-            helperText={error}
-            sx={{ mb: 2 }}
-          />
+  fullWidth
+  id="password"
+  label="Password"
+  type={showPassword ? "text" : "password"} // 👈 toggle here
+  variant="outlined"
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  error={Boolean(error)}
+  helperText={error}
+  sx={{ mb: 2 }}
+  InputProps={{
+    endAdornment: (
+      <InputAdornment position="end">
+        <IconButton
+          onClick={() => setShowPassword((prev) => !prev)}
+          edge="end"
+        >
+          {showPassword ? <VisibilityOff /> : <Visibility />}
+        </IconButton>
+      </InputAdornment>
+    ),
+    style: {
+      color: isDarkMode ? "#FFFFFF" : "",
+    },
+  }}
+  InputLabelProps={{
+    style: {
+      color: isDarkMode ? "#FFFFFF" : "",
+    },
+  }}
+/>
           <Button
             fullWidth
             onClick={handleLogin}
